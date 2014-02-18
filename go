@@ -29,21 +29,19 @@ usage() {
   build		#Builds images
   run		#Builds and runs images in containers
   clean		#Stops and destroys containers
+  dig-skydns    #Run dig against skydns docker container
 EOS
 }
 
-case "$1" in
-  build)
-    build
-    ;;
-  run)
-    build && run
-    ;;
-  clean)
-    clean
-    ;;
-  *)
-    usage
-    ;;
-esac
+dig-skydns() {
+  DNS_HOST=$(docker inspect skydns | grep IPAddress | sed 's/[^0-9\.]*//g')
+  dig @$DNS_HOST $@
+}
+
+if ! type $1 2>&1 | grep function > /dev/null; then
+  usage
+  exit 1
+fi
+
+$1 "${@:2}"
 
