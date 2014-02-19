@@ -5,15 +5,19 @@ set -e
 build() {
   bash -c "docker build -t docker-skydns github.com/nullstyle/docker-skydns"
   bash -c "cd app && gradle shadow && docker build -t services/app ."
+  bash -c "cd ui && docker build -t services/ui ."
 }
 
 run() {
   docker run -d -p 53:53/udp -name skydns docker-skydns
   docker run -d -link skydns:skydns -p 8080:8080 -name app services/app
+  docker run -d -link skydns:skydns -p 8081:80 -name ui services/ui
 }
 
 clean() {
   bash <<EOS
+    docker stop ui
+    docker rm ui
     docker stop app
     docker rm app
     docker stop skydns
