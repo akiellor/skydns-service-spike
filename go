@@ -27,18 +27,23 @@ EOS
 }
 
 dig-skydns() {
-  DNS_HOST=$(docker inspect skydns | grep IPAddress | sed 's/[^0-9\.]*//g')
+  DNS_HOST=`dns-server`
   dig @$DNS_HOST $@
+}
+
+dns-server() {
+  docker inspect skydns | grep IPAddress | sed 's/[^0-9\.]*//g'
 }
 
 usage() {
   cat <<EOS
 ./go [subcommand]
 
-  build		#Builds images
-  run		#Builds and runs images in containers
-  clean		#Stops and destroys containers
-  dig-skydns    #Run dig against skydns docker container
+	build		#Builds images
+	run		#Builds and runs images in containers
+	clean		#Stops and destroys containers
+	dns-server	#Reports dns server
+	dig-skydns	#Run dig against skydns docker container
 EOS
 }
 
