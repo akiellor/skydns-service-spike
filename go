@@ -10,8 +10,8 @@ build() {
 
 run() {
   docker run -d -p 53:53/udp -name skydns docker-skydns
-  docker run -d -link skydns:skydns -p 8080:8080 -name app services/app
-  docker run -d -link skydns:skydns -p 8081:80 -name ui services/ui
+  docker run -d -dns `dns-server` -link skydns:skydns -p 8080:8080 -name app services/app
+  docker run -d -dns `dns-server` -link skydns:skydns -p 8081:80 -name ui services/ui
 }
 
 clean() {
