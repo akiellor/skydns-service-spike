@@ -6,6 +6,7 @@ build() {
   bash -c "docker build -t docker-skydns github.com/nullstyle/docker-skydns"
   bash -c "cd app && gradle shadow && docker build -t services/app ."
   bash -c "cd ui && docker build -t services/ui ."
+  bash -c "cd shell && docker build -t services/shell ."
 }
 
 run() {
@@ -35,6 +36,10 @@ dns-server() {
   docker inspect skydns | grep IPAddress | sed 's/[^0-9\.]*//g'
 }
 
+shell() {
+  docker run -t -i -dns `dns-server` services/shell
+}
+
 usage() {
   cat <<EOS
 ./go [subcommand]
@@ -44,6 +49,7 @@ usage() {
 	clean		#Stops and destroys containers
 	dns-server	#Reports dns server
 	dig-skydns	#Run dig against skydns docker container
+	shell		#Run a bash shell with dns setup
 EOS
 }
 
