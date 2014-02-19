@@ -22,6 +22,11 @@ EOS
   git clean -df
 }
 
+dig-skydns() {
+  DNS_HOST=$(docker inspect skydns | grep IPAddress | sed 's/[^0-9\.]*//g')
+  dig @$DNS_HOST $@
+}
+
 usage() {
   cat <<EOS
 ./go [subcommand]
@@ -31,11 +36,6 @@ usage() {
   clean		#Stops and destroys containers
   dig-skydns    #Run dig against skydns docker container
 EOS
-}
-
-dig-skydns() {
-  DNS_HOST=$(docker inspect skydns | grep IPAddress | sed 's/[^0-9\.]*//g')
-  dig @$DNS_HOST $@
 }
 
 if ! type $1 2>&1 | grep function > /dev/null; then
