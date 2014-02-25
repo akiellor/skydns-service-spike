@@ -5,6 +5,7 @@ set -e
 build() {
   bash -c "docker build -t docker-skydns github.com/nullstyle/docker-skydns"
   bash -c "cd app && gradle shadow && docker build -t services/app ."
+  bash -c "cd health && gradle shadow && docker build -t services/health ."
   bash -c "cd ui && docker build -t services/ui ."
   bash -c "cd shell && docker build -t services/shell ."
 }
@@ -13,6 +14,7 @@ run() {
   docker run -d -name skydns docker-skydns
   docker run -d -dns `dns-server` -link skydns:skydns -p 8080:8080 -name app services/app
   docker run -d -dns `dns-server` -link skydns:skydns -p 8081:80 -name ui services/ui
+  docker run -d -dns `dns-server` -link skydns:skydns -p 8082:8080 -name health services/health
 }
 
 clean() {
