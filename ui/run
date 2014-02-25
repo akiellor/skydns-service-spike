@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -e
+
+RESOURCE="http://$SKYDNS_PORT_8080_TCP_ADDR:$SKYDNS_PORT_8080_TCP_PORT/skydns/services/$(uuid)"
+
+curl -s -S -X PUT -L $RESOURCE -d@- <<EOS
+{"Name":"services-ui","Version":"1.0.0","Environment":"Production","Region":"West","Host":"$(hostname --ip-address)","Port":80,"TTL":5}
+EOS
+
+start-stop-daemon --start -b --exec /opt/skydnsd -- $RESOURCE 20
+
+nginx

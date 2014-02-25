@@ -10,7 +10,7 @@ build() {
 }
 
 run() {
-  docker run -d -p 53:53/udp -name skydns docker-skydns
+  docker run -d -name skydns docker-skydns
   docker run -d -dns `dns-server` -link skydns:skydns -p 8080:8080 -name app services/app
   docker run -d -dns `dns-server` -link skydns:skydns -p 8081:80 -name ui services/ui
 }
@@ -23,8 +23,9 @@ clean() {
     docker rm app
     docker stop skydns
     docker rm skydns
+    docker stop health
+    docker rm health
 EOS
-  git clean -df
 }
 
 dig-skydns() {
