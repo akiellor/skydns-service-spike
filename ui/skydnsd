@@ -2,4 +2,20 @@
 
 set -e
 
-watch -n1 -- "curl -s -S -X PATCH $1 -d '{\"TTL\": $2\}'"
+RESOURCE=$1
+DATA="{\"TTL\": $2}"
+
+cat <<EOS
+skydnsd...
+ \- $RESOURCE << $DATA
+EOS
+
+while true
+do
+  sh <<EOS
+  curl -s -S -X PATCH '$RESOURCE' -d '$DATA'
+  exit 0
+EOS
+
+  sleep 1
+done

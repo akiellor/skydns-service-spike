@@ -8,6 +8,8 @@ curl -s -S -X PUT -L $RESOURCE -d@- <<EOS
 {"Name":"services-ui","Version":"1.0.0","Environment":"Production","Region":"West","Host":"$(hostname --ip-address)","Port":80,"TTL":5}
 EOS
 
-start-stop-daemon --start -b --exec /opt/skydnsd -- $RESOURCE 20
+/opt/skydnsd $RESOURCE 20 &
 
-nginx
+nginx &
+
+wait $(jobs -p)
