@@ -2,6 +2,11 @@
 
 set -e
 
+container-kill() {
+  docker stop $1
+  docker rm $1
+}
+
 build() {
   bash -c "docker build -t docker-skydns github.com/nullstyle/docker-skydns"
   bash -c "cd app && gradle shadow && docker build -t services/app ."
