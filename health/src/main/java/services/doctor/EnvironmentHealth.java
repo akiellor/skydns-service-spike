@@ -1,7 +1,8 @@
-package services;
+package services.doctor;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
+import services.Health;
 
 import java.util.List;
 

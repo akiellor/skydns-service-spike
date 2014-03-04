@@ -2,6 +2,8 @@ package services;
 
 import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
+import services.doctor.Doctor;
+import services.registry.ServiceRegistry;
 
 import static org.quartz.JobBuilder.newJob;
 
@@ -19,6 +21,9 @@ public class HealthService extends com.yammer.dropwizard.Service<SkyDnsServiceCo
 
     @Override
     public void run(SkyDnsServiceConfiguration configuration, final Environment environment) {
-        environment.addResource(new HealthResource(configuration.getSkyDnsHost()));
+        ServiceRegistry registry = new ServiceRegistry(configuration.getSkyDnsHost(), ".skydns.local");
+        Doctor doctor = new Doctor();
+
+        environment.addResource(new HealthResource(registry, doctor));
     }
 }
