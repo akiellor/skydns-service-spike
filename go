@@ -2,6 +2,8 @@
 
 set -e
 
+source $(dirname $0)/boot
+
 ### container-kill: Stops and removes container with specified name.
 container-kill() {
   docker stop $1
@@ -55,4 +57,4 @@ shell() {
   docker run -t -i -dns `dns-server` services/shell
 }
 
-source $(dirname $0)/boot
+execute $@
